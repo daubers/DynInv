@@ -133,3 +133,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+HVAC_URI = 'http://localhost:8200'
+HVAC_TOKEN = 'lol_bananas_12'
+HVAC_KV_MOUNT_POINT = 'dyninv/'
+HVAC_SSH_MOUNT_POINT = 'ssh'
