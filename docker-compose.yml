@@ -6,3 +6,19 @@ services:
       - VAULT_DEV_ROOT_TOKEN_ID=lol_bananas_12
     ports:
       - "8200:8200"
+
+  consul:
+    image: consul:latest
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+    ports:
+      - "8500:8500"
+      - "8300:8300"
+
+  consul-agent:
+    image: consul:latest
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+    command: agent -dev -join=consul
+    ports:
+      - "8301:8300"
