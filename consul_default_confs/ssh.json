@@ -1,0 +1,8 @@
+{
+  "service": {
+    "id": "ssh",
+    "name": "ssh",
+    "tags": ["connectivity","shell"],
+    "port": 22
+  }
+}

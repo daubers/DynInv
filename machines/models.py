@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 import hvac
+import consul
 import uuid
 
 
@@ -43,15 +44,33 @@ class CommonVars(models.Model):
 
 class Machine(models.Model):
     hostname = models.CharField(max_length=255)
-    ip_address = models.GenericIPAddressField()
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    use_consul = models.BooleanField()
     update_address = models.BooleanField()
-    ssh_key_in_vault = models.BooleanField(default=False)
+    use_vault_for_credentials = models.BooleanField(default=False)
     enabled = models.BooleanField()
     last_update = models.DateTimeField()
     created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.hostname
+
+    @classmethod
+    def from_db(cls, db, field_names, values):
+        instance = cls(*values)
+        instance._state.adding = False
+        instance._state.db = db
+        # customization to store the original field values on the instance
+        if instance.use_consul:
+            try:
+                c = consul.Consul()
+                consul_data = c.catalog.node(instance.hostname)
+                print(instance.hostname)
+                instance.ip_address = consul_data[1]['Node']['Address']
+            except Exception as e:
+                print(e)
+                pass
+        return instance
 
 
 class HostVars(CommonVars):
