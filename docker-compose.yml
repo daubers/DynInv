@@ -23,3 +23,13 @@ services:
     command: agent -dev -join=consul
     volumes:
       - "./consul_default_confs:/consul/config"
+
+  ssh-agent:
+    build:
+      context: ./consul_default_confs/
+      dockerfile: $PWD/DevContainers/Dockerfile.consul_ssh
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+      - CONSUL_JOIN_ADDR=consul
+    volumes:
+      - "./consul_default_confs:/consul/config"
