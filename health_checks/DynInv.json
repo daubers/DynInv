@@ -1,0 +1,24 @@
+{"service":
+  {"name": "DynInv",
+    "tags": ["web"],
+    "port": 8000
+  },
+  "checks": [
+      {
+        "id": "api",
+        "name": "HTTP API on port 8000",
+        "http": "http://localhost:8000/graphql",
+        "tls_skip_verify": true,
+        "method": "GET",
+        "interval": "10s",
+        "timeout": "1s"
+    },
+    {
+      "id": "mem-util",
+      "name": "Memory utilization",
+      "args": ["/usr/bin/uname"],
+      "interval": "10s",
+      "timeout": "1s"
+    }
+  ]
+}
