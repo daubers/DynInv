@@ -4,19 +4,19 @@
     "port": 8000
   },
   "checks": [
-      {
-        "id": "api",
-        "name": "HTTP API on port 8000",
-        "http": "http://localhost:8000/graphql",
-        "tls_skip_verify": true,
-        "method": "GET",
-        "interval": "10s",
-        "timeout": "1s"
+    {
+      "id": "uname",
+      "name": "Kernel Version",
+      "args": ["/usr/bin/uname", "-a"],
+      "interval": "1m",
+      "timeout": "1s"
     },
     {
-      "id": "mem-util",
-      "name": "Memory utilization",
-      "args": ["/usr/bin/uname"],
+      "id": "api",
+      "name": "HTTP API on port 8000",
+      "http": "http://localhost:8000/health_check",
+      "tls_skip_verify": true,
+      "method": "GET",
       "interval": "10s",
       "timeout": "1s"
     }
