@@ -7,20 +7,38 @@ services:
     ports:
       - "8200:8200"
 
-  consul:
+  consul_1:
     image: consul:latest
     environment:
       - CONSUL_BIND_INTERFACE=eth0
+    command: agent -server -ui -data-dir=/consul/data -bootstrap -retry-join consul_2 -retry-join consul_3
+    volumes:
+    - "$PWD/consul/data_1:/consul/data"
     ports:
-      - "8500:8500"
       - "8300:8300"
+
+  consul_2:
+    image: consul:latest
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+    command: consul agent -server -data-dir=/consul/data -retry-join=consul_1 -retry-join consul_3
+    volumes:
+    - "$PWD/consul/data_2:/consul/data"
+
+  consul_3:
+    image: consul:latest
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+    command: consul agent -server -data-dir=/consul/data -retry-join=consul_1 -retry-join consul_2
+    volumes:
+    - "$PWD/consul/data_3:/consul/data"
 
   consul-agent:
     image: consul:latest
     hostname: agent1
     environment:
       - CONSUL_BIND_INTERFACE=eth0
-    command: agent -dev -join=consul
+    command: agent -dev -join=consul_1
     volumes:
       - "./consul_default_confs:/consul/config"
 
